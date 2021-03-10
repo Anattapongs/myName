@@ -15,8 +15,17 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         title = "Name"
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
-        if nameLabel.text != "" {
+        if isKeyPresentInUserDefaults(key: "name") {
+            if let name = UserDefaults.standard.string(forKey: "name") {
+                nameLabel.text = "Hello: \(name)"
+            }
+            
+        } else {
             setupAlert()
         }
         
@@ -31,6 +40,7 @@ class ViewController: UIViewController {
                 return
             }
             self.nameLabel.text = "Hello: \(nameToSave)"
+            UserDefaults.standard.set(nameToSave, forKey: "name")
         }
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
@@ -42,10 +52,16 @@ class ViewController: UIViewController {
         present(alert, animated: true)
     }
     
+    func isKeyPresentInUserDefaults(key: String) -> Bool {
+        return UserDefaults.standard.object(forKey: key) != nil
+    }
+    
     @IBAction func deleteNameButtonPressed(_ sender: Any) {
         let alert = UIAlertController(title: "Alert", message: "Are you sure you watn to delete?", preferredStyle: .alert)
         let confirmAction = UIAlertAction(title: "OK", style: .destructive) { [unowned self] action in
             self.nameLabel.text = "Your name"
+            let prefs = UserDefaults.standard
+            prefs.removeObject(forKey: "name")
         }
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
