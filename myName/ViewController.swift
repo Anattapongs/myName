@@ -71,6 +71,13 @@ class ViewController: UIViewController {
     }
     
     @IBAction func addNameButtonPressed(_ sender: Any) {
+        if isKeyPresentInUserDefaults(key: "name") {
+            let alert = UIAlertController(title: "Alert", message: "You already have a name.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            present(alert, animated: true)
+        } else {
+            setupAlert()
+        }
         
     }
     
